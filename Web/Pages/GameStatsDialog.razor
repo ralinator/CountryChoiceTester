@@ -1,0 +1,14 @@
+﻿<MudDialog>
+    <DialogContent>
+        @for (var i = 0; i < 6; i++)
+        {
+            var localIndex = i;
+            <MudPaper Class="ma-4 d-flex justify-space-between">
+                <strong>@localIndex.ToString()</strong>
+                <span>@_gameRecords.Count(q => q.NumberOfAttemptsRequired == localIndex)</span>
+            </MudPaper>
+        }
+    </DialogContent>
+</MudDialog>
+
+

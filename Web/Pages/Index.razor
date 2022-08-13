@@ -1,0 +1,61 @@
+﻿@page "/"
+
+<style>
+    .unset-container .country-name {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .country-name {
+        text-align: center;
+        color: white;
+    }
+</style>
+
+<MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" ItemDropped="ItemUpdated" @ref="_dropContainerReference" ItemIsDisabled="q => IsTodaysGameSolved">
+    <ChildContent>
+        <MudGrid Style="height: 100vh">
+            <MudItem xs="3" Style="height: 100%;justify-items:stretch;" Class="d-flex flex-column">
+                <MudDropZone T="DropItem" Identifier="@_unsetIdentifier" Class="rounded mud-background-gray pa-6 flex-grow-1 unset-container">
+                    <MudText Typo="Typo.h6" Class="mb-4">Country Names to assign</MudText>
+                </MudDropZone>
+                <MudPaper Class="ma-8 d-flex justify-space-between">
+                    <MudButton Color="Color.Warning" OnClick="ResetAllItemsAsUnset" Variant="Variant.Filled" Disabled="IsTodaysGameSolved">Reset</MudButton>
+                    <MudButton Color="Color.Success" OnClick="Submit" Variant="Variant.Filled" Disabled="IsSubmissionValid is false">Submit</MudButton>
+                </MudPaper>
+                @*@for (var i = 0; i < _previousAttemptsToday.Count; i++)
+                {
+                <MudPaper Class="ma-8">
+                Guess @(i + 1) - @(_previousAttemptsToday.ElementAt(i)) correct
+                </MudPaper>
+                }*@
+                <MudPaper Class="ma-8">
+                    @foreach (var attempt in _previousAttemptsToday)
+                    {
+                        <p>@(_numberOfCountriesToGuess - attempt) correct</p>
+                    }
+                </MudPaper>
+
+            </MudItem>
+            <MudItem xs="9" Style="height: 100%" Class="assigned-countries-container">
+                <MudGrid Style="height: 100%">
+                    @foreach (var country in _items.OrderBy(q => q.OrderIndex))
+                    {
+                        <MudItem xs="4" Style="height: 33.33%">
+                            <MudCard Style="height: 100%">
+                                <MudDropZone T="DropItem" Identifier="@country.Country.Code"
+                                         Class="flex-grow-1" Style="height: 100%;">
+                                    <div style=@($"height:calc(100% - 52px);background-image: url(\"/countryimages/{country.Country.Code}.svg\");background-size:contain;background-repeat:no-repeat;background-position:center;background-color:white;border-color:dodgerblue;border-bottom-width:2px") class="pb-2"></div>
+                                </MudDropZone>
+
+                            </MudCard>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudItem>
+        </MudGrid>
+    </ChildContent>
+    <ItemRenderer>
+        <MudPaper Elevation="25" Class="pa-4 country-name" Style="@($"background-color:{(IsTodaysGameSolved ? "lightgreen": "dodgerblue")}")">@context.Country.Name</MudPaper>
+    </ItemRenderer>
+</MudDropContainer>
