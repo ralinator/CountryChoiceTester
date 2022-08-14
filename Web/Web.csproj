@@ -1,5 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
-
+	<Target Name="ConfigureTrimming"
+        BeforeTargets="PrepareForILLink">
+		<ItemGroup>
+			<ManagedAssemblyToLink Condition="'%(Filename)' == 'MudBlazor'">
+				<TrimMode>copyused</TrimMode>
+			</ManagedAssemblyToLink>
+		</ItemGroup>
+	</Target>
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>

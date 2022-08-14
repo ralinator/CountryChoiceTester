@@ -17,9 +17,9 @@
     <ChildContent>
         <MudGrid Style="height: 100vh">
             <MudItem xs="3" Style="justify-items:stretch;" Class="d-flex flex-column">
-                <MudTabs Class="rounded mud-background-gray pa-6 flex-grow-1" @ref="_tabsReference">
+                <MudTabs Class="rounded mud-background-gray flex-grow-1" @ref="_tabsReference">
                     <MudTabPanel Text="Countries">
-                        <MudDropZone T="DropItem" Identifier="@_unsetIdentifier" Class="unset-container">
+                        <MudDropZone T="DropItem" Identifier="@_unsetIdentifier" Class="unset-container pa-6">
                         </MudDropZone>
                     </MudTabPanel>
                     <MudTabPanel Text="Attempts">
@@ -49,8 +49,9 @@
                     </MudTabPanel>
                 </MudTabs>
 
-                <MudPaper Class="ma-8 d-flex justify-space-between">
+                <MudPaper Class="ma-4 d-flex justify-space-between">
                     <MudButton Color="Color.Warning" OnClick="ResetAllItemsAsUnset" Variant="Variant.Filled" Disabled="IsTodaysGameSolved">Reset</MudButton>
+                    <MudButton Color="Color.Info" OnClick="OpenDialog" Variant="Variant.Filled">Stats</MudButton>
                     <MudButton Color="Color.Success" OnClick="Submit" Variant="Variant.Filled" Disabled="IsSubmissionValid is false">Submit</MudButton>
                 </MudPaper>
             </MudItem>

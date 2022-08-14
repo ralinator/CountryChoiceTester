@@ -72,10 +72,16 @@ namespace Web.Pages
             {
                 OpenDialog();
             }
-            if (_previousAttemptsToday.Any())
+            if (_items.All(q => q.Identifier != _unsetIdentifier))
             {
                 _tabsReference!.ActivatePanel(1);
             }
+        }
+
+        protected override void OnAfterRender(bool firstRender)
+        {
+            base.OnAfterRender(firstRender);
+            _dropContainerReference!.Refresh();
         }
 
         private void SetUpNewState()
@@ -201,7 +207,7 @@ namespace Web.Pages
                 .Select(q => q.State)
                 .ToListAsync();
             // Remove Current Attempt If Not Solved
-            if (IsTodaysGameSolved is false)
+            if (IsTodaysGameSolved is false && attemptsToday.Any())
             {
                 attemptsToday.RemoveAt(attemptsToday.Count - 1);
             }
