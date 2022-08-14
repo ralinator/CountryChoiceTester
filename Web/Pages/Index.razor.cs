@@ -236,7 +236,8 @@ namespace Web.Pages
             {
                 CloseOnEscapeKey = true,
                 FullWidth = true,
-                MaxWidth = MaxWidth.Large
+                MaxWidth = MaxWidth.Large,
+                CloseButton = true,
             };
             DialogService.Show<GameStatsDialog>("Game Stats", options);
         }

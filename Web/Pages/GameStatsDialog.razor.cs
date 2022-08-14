@@ -25,7 +25,9 @@ namespace Web.Pages
         protected override async Task OnInitializedAsync()
         {
             await using var db = await DbContextFactory.CreateDbContextAsync();
-            _gameRecords = await db.GameRecords.ToListAsync();
+            _gameRecords = await db.GameRecords
+                .OrderByDescending(q => q.Date)
+                .ToListAsync();
             StartTimer();
         }
 
