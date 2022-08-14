@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Setup .NET Workload
-      uses: dotnet workload restore
+      run: dotnet workload restore
     - name: Publish app
       run: dotnet publish -c Release
 
