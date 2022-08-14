@@ -81,7 +81,7 @@
                                                 var previousAttempt = _previousAttemptsToday[localIndex];
                                                 var thisAttempt = previousAttempt.First(q => q.Identifier == country.Country.Code);
                                                 var color = Color.Default;
-                                                if ((localParentIndex + 1) <= _previousAttemptsToday.Count)
+                                                if ((localParentIndex + 1) <= _previousAttemptsToday.Count || IsTodaysGameSolved)
                                                 {
                                                     color = thisAttempt.IsCorrect ? Color.Success : Color.Error;
                                                 }
