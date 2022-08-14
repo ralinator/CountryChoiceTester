@@ -7,12 +7,12 @@
                 </MudText>
             </MudItem>
             <MudItem xs="12">
-                @for (var i = 0; i < 6; i++)
+                @for (var i = 0; i < Index.MaxAllowedAttempts; i++)
                 {
                     var localIndex = i;
                     <MudPaper Class="ma-4 d-flex justify-space-between">
-                        <strong>@localIndex.ToString()</strong>
-                        <span>@_gameRecords.Count(q => q.NumberOfAttemptsRequired == localIndex)</span>
+                        <strong>@(localIndex + 1)</strong>
+                        <span>@_gameRecords.Count(q => q.NumberOfAttemptsRequired == (localIndex + 1))</span>
                     </MudPaper>
                 }
             </MudItem>

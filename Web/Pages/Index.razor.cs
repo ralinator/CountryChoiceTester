@@ -11,7 +11,8 @@ namespace Web.Pages
 {
     public partial class Index
     {
-        private const int _numberOfCountriesToGuess = 9;
+        public const int MaxAllowedAttempts = 12;
+        public const int NumberOfCountriesToGuess = 9;
         private const string _unsetIdentifier = "Unset";
 
         private List<DropItem> _items = new();
@@ -87,7 +88,7 @@ namespace Web.Pages
         private void SetUpNewState()
         {
             var random = new Random((int)DateTime.Today.Ticks);
-            for (int i = 0; i < _numberOfCountriesToGuess; i++)
+            for (int i = 0; i < NumberOfCountriesToGuess; i++)
             {
                 int index;
                 do
@@ -98,7 +99,7 @@ namespace Web.Pages
                 int orderIndex;
                 do
                 {
-                    orderIndex = random.Next(0, _numberOfCountriesToGuess);
+                    orderIndex = random.Next(0, NumberOfCountriesToGuess);
                 }
                 while (_items.Any(q => q.OrderIndex == orderIndex));
                 _items.Add(new DropItem
@@ -163,6 +164,13 @@ namespace Web.Pages
                 return;
             }
             await using var db = await DbContextFactory.CreateDbContextAsync();
+            if (_previousAttemptsToday.Count >= (MaxAllowedAttempts - 1))
+            {
+                foreach (var item in _items)
+                {
+                    item.Identifier = item.Country.Code;
+                }
+            }
             if (_items.All(q => q.IsCorrect))
             {
                 var attempts = await db.GameStates.CountAsync(q => q.Date.Date == DateTime.Today);

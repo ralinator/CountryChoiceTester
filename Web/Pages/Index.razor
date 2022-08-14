@@ -10,14 +10,19 @@
         text-align: center;
         color: white;
     }
+
+    .assigned-countries-container .mud-timeline-item-dot.mud-timeline-dot-size-small {
+        width: 12px!important;
+        height: 12px!important;
+    }
 </style>
 
 <MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)"
                   ItemDropped="ItemUpdated" @ref="_dropContainerReference" ItemIsDisabled="q => IsTodaysGameSolved">
     <ChildContent>
         <MudGrid Style="height: 100vh">
-            <MudItem xs="3" Style="justify-items:stretch;" Class="d-flex flex-column">
-                <MudTabs Class="rounded mud-background-gray flex-grow-1" @ref="_tabsReference">
+            <MudItem xs="3" Style="justify-items:stretch;" Class="d-flex flex-column justify-space-between">
+                <MudTabs Class="rounded mud-background-gray" @ref="_tabsReference" Style="height: 80%;overflow-y:scroll;">
                     <MudTabPanel Text="Countries">
                         <MudDropZone T="DropItem" Identifier="@_unsetIdentifier" Class="unset-container pa-6">
                         </MudDropZone>
@@ -35,11 +40,11 @@
                                         <MudAlert Severity="isCorrect ? Severity.Success : Severity.Error">
                                             @if (isCorrect)
                                             {
-                                                <span>All @(_numberOfCountriesToGuess) countries picked correctly!</span>
+                                                <span>All @(NumberOfCountriesToGuess) countries picked correctly!</span>
                                             }
                                             @if (isCorrect is false)
                                             {
-                                                <span>@(correctCount)/@(_numberOfCountriesToGuess) countries picked correctly.</span>
+                                                <span>@(correctCount)/@(NumberOfCountriesToGuess) countries picked correctly.</span>
                                             }
                                         </MudAlert>
                                     </ItemContent>
@@ -57,13 +62,37 @@
             </MudItem>
             <MudItem xs="9" Style="height: 100%" Class="assigned-countries-container">
                 <MudGrid Style="height: 100%">
-                    @foreach (var country in _items.OrderBy(q => q.OrderIndex))
+                    @for (var i = 0; i < _items.Count; i++)
                     {
+                        var localParentIndex = i;
+                        var country = _items.OrderBy(q => q.OrderIndex).ElementAt(localParentIndex);
                         <MudItem xs="4" Style="height: 33.33%">
                             <MudCard Style="height: 100%">
                                 <MudDropZone T="DropItem" Identifier="@country.Country.Code"
                                          Class="flex-grow-1" Style="height: 100%;">
-                                    <div style=@($"height:calc(100% - 52px);background-image: url(\"/countryimages/{country.Country.Code}.svg\");background-size:contain;background-repeat:no-repeat;background-position:center;background-color:white;border-color:dodgerblue;border-bottom-width:2px") class="pb-2"></div>
+                                    <div style="height:calc(100% - 52px);background-color:white;border-color:dodgerblue;border-bottom-width:2px;"
+                                     class="d-flex justify-space-between">
+                                        <div style=@($"background-image: url(\"/countryimages/{country.Country.Code}.svg\");background-size:contain;background-repeat:no-repeat;background-position:center;width:50%;")
+                                         class="pb-2"></div>
+                                        <MudTimeline TimelinePosition="TimelinePosition.Left" Class="flex-grow-1" Style="padding-top:0px;overflow-y: scroll;">
+                                            @for (var i = 0; i < _previousAttemptsToday.Count; i++)
+                                            {
+                                                var localIndex = i;
+                                                var previousAttempt = _previousAttemptsToday[localIndex];
+                                                var thisAttempt = previousAttempt.First(q => q.Identifier == country.Country.Code);
+                                                var color = Color.Default;
+                                                if ((localParentIndex + 1) <= _previousAttemptsToday.Count)
+                                                {
+                                                    color = thisAttempt.IsCorrect ? Color.Success : Color.Error;
+                                                }
+                                                <MudTimelineItem Variant="Variant.Filled" Color="color" Style="padding-bottom: 3px;" Size="Size.Small">
+                                                    <ItemContent>
+                                                        @(thisAttempt.Country.Name.Length > 9 ? $"{thisAttempt.Country.Name.Substring(0, 9)}..." : thisAttempt.Country.Name)
+                                                    </ItemContent>
+                                                </MudTimelineItem>
+                                            }
+                                        </MudTimeline>
+                                    </div>
                                 </MudDropZone>
                             </MudCard>
                         </MudItem>
