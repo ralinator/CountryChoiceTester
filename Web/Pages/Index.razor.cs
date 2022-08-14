@@ -15,9 +15,10 @@ namespace Web.Pages
         private const string _unsetIdentifier = "Unset";
 
         private List<DropItem> _items = new();
-        private List<int> _previousAttemptsToday = new();
+        private List<List<DropItem>> _previousAttemptsToday = new();
         private List<GameRecord> _gameRecords = new();
         private MudDropContainer<DropItem>? _dropContainerReference;
+        private MudTabs? _tabsReference = null!;
         private GameData _gameData = null!;
 
         private bool IsSubmissionValid =>
@@ -30,6 +31,7 @@ namespace Web.Pages
             public Country Country { get; init; } = null!;
             public string Identifier { get; set; } = _unsetIdentifier;
             public int OrderIndex { get; set; }
+            public bool IsCorrect => Identifier == Country.Code;
         }
         [Inject]
         private IGameDataService GameDataService { get; set; } = null!;
@@ -69,6 +71,10 @@ namespace Web.Pages
             if (IsTodaysGameSolved)
             {
                 OpenDialog();
+            }
+            if (_previousAttemptsToday.Any())
+            {
+                _tabsReference!.ActivatePanel(1);
             }
         }
 
@@ -151,7 +157,7 @@ namespace Web.Pages
                 return;
             }
             await using var db = await DbContextFactory.CreateDbContextAsync();
-            if (_items.All(q => q.Country.Code == q.Identifier))
+            if (_items.All(q => q.IsCorrect))
             {
                 var attempts = await db.GameStates.CountAsync(q => q.Date.Date == DateTime.Today);
                 var gameRecord = new GameRecord
@@ -165,8 +171,6 @@ namespace Web.Pages
             }
             else
             {
-                _items.Clear();
-                SetUpNewState();
                 var state = new GameState();
                 db.GameStates.Add(state);
                 await db.SaveChangesAsync();
@@ -177,13 +181,15 @@ namespace Web.Pages
             if (IsTodaysGameSolved)
             {
                 SnackbarService.Add("All countries correct!", Severity.Success);
+                OpenDialog();
             }
             else
             {
-                SnackbarService.Add($"{_previousAttemptsToday.Last()} countries incorrect, please try again", 
+                SnackbarService.Add($"{_previousAttemptsToday.Last().Count(q => q.IsCorrect is false)} countries incorrect, please try again",
                     Severity.Error);
             }
             _dropContainerReference!.Refresh();
+            _tabsReference!.ActivatePanel(1);
         }
 
         private async Task LoadPreviousAttemptsToday()
@@ -194,20 +200,30 @@ namespace Web.Pages
                 .OrderBy(q => q.Id)
                 .Select(q => q.State)
                 .ToListAsync();
+            // Remove Current Attempt If Not Solved
+            if (IsTodaysGameSolved is false)
+            {
+                attemptsToday.RemoveAt(attemptsToday.Count - 1);
+            }
             _previousAttemptsToday = new();
             foreach (var attempt in attemptsToday)
             {
                 var deserializedAttempt = JsonSerializer.Deserialize<List<DropItem>>(attempt)!;
                 if (deserializedAttempt.All(q => q.Identifier is not _unsetIdentifier))
                 {
-                    _previousAttemptsToday.Add(deserializedAttempt.Count(q => q.Country.Code != q.Identifier));
+                    _previousAttemptsToday.Add(deserializedAttempt);
                 }
             }
         }
 
         private void OpenDialog()
         {
-            var options = new DialogOptions { CloseOnEscapeKey = true };
+            var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true,
+                FullWidth = true,
+                MaxWidth = MaxWidth.Large
+            };
             DialogService.Show<GameStatsDialog>("Game Stats", options);
         }
     }

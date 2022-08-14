@@ -12,30 +12,47 @@
     }
 </style>
 
-<MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)" ItemDropped="ItemUpdated" @ref="_dropContainerReference" ItemIsDisabled="q => IsTodaysGameSolved">
+<MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)"
+                  ItemDropped="ItemUpdated" @ref="_dropContainerReference" ItemIsDisabled="q => IsTodaysGameSolved">
     <ChildContent>
         <MudGrid Style="height: 100vh">
-            <MudItem xs="3" Style="height: 100%;justify-items:stretch;" Class="d-flex flex-column">
-                <MudDropZone T="DropItem" Identifier="@_unsetIdentifier" Class="rounded mud-background-gray pa-6 flex-grow-1 unset-container">
-                    <MudText Typo="Typo.h6" Class="mb-4">Country Names to assign</MudText>
-                </MudDropZone>
+            <MudItem xs="3" Style="justify-items:stretch;" Class="d-flex flex-column">
+                <MudTabs Class="rounded mud-background-gray pa-6 flex-grow-1" @ref="_tabsReference">
+                    <MudTabPanel Text="Countries">
+                        <MudDropZone T="DropItem" Identifier="@_unsetIdentifier" Class="unset-container">
+                        </MudDropZone>
+                    </MudTabPanel>
+                    <MudTabPanel Text="Attempts">
+                        <MudTimeline TimelinePosition="TimelinePosition.Left">
+                            @for (var i = 0; i < _previousAttemptsToday.Count; i++)
+                            {
+                                var localIndex = i;
+                                var isCorrect = _previousAttemptsToday[localIndex].All(q => q.IsCorrect);
+                                var correctCount = _previousAttemptsToday[localIndex].Count(q => q.IsCorrect);
+                                <MudTimelineItem Color="isCorrect ? Color.Success : Color.Error"
+                                             Variant="Variant.Filled">
+                                    <ItemContent>
+                                        <MudAlert Severity="isCorrect ? Severity.Success : Severity.Error">
+                                            @if (isCorrect)
+                                            {
+                                                <span>All @(_numberOfCountriesToGuess) countries picked correctly!</span>
+                                            }
+                                            @if (isCorrect is false)
+                                            {
+                                                <span>@(correctCount)/@(_numberOfCountriesToGuess) countries picked correctly.</span>
+                                            }
+                                        </MudAlert>
+                                    </ItemContent>
+                                </MudTimelineItem>
+                            }
+                        </MudTimeline>
+                    </MudTabPanel>
+                </MudTabs>
+
                 <MudPaper Class="ma-8 d-flex justify-space-between">
                     <MudButton Color="Color.Warning" OnClick="ResetAllItemsAsUnset" Variant="Variant.Filled" Disabled="IsTodaysGameSolved">Reset</MudButton>
                     <MudButton Color="Color.Success" OnClick="Submit" Variant="Variant.Filled" Disabled="IsSubmissionValid is false">Submit</MudButton>
                 </MudPaper>
-                @*@for (var i = 0; i < _previousAttemptsToday.Count; i++)
-                {
-                <MudPaper Class="ma-8">
-                Guess @(i + 1) - @(_previousAttemptsToday.ElementAt(i)) correct
-                </MudPaper>
-                }*@
-                <MudPaper Class="ma-8">
-                    @foreach (var attempt in _previousAttemptsToday)
-                    {
-                        <p>@(_numberOfCountriesToGuess - attempt) correct</p>
-                    }
-                </MudPaper>
-
             </MudItem>
             <MudItem xs="9" Style="height: 100%" Class="assigned-countries-container">
                 <MudGrid Style="height: 100%">
@@ -47,7 +64,6 @@
                                          Class="flex-grow-1" Style="height: 100%;">
                                     <div style=@($"height:calc(100% - 52px);background-image: url(\"/countryimages/{country.Country.Code}.svg\");background-size:contain;background-repeat:no-repeat;background-position:center;background-color:white;border-color:dodgerblue;border-bottom-width:2px") class="pb-2"></div>
                                 </MudDropZone>
-
                             </MudCard>
                         </MudItem>
                     }

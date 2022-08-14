@@ -1,13 +1,23 @@
 ﻿<MudDialog>
     <DialogContent>
-        @for (var i = 0; i < 6; i++)
-        {
-            var localIndex = i;
-            <MudPaper Class="ma-4 d-flex justify-space-between">
-                <strong>@localIndex.ToString()</strong>
-                <span>@_gameRecords.Count(q => q.NumberOfAttemptsRequired == localIndex)</span>
-            </MudPaper>
-        }
+        <MudGrid>
+            <MudItem xs="12">
+                <MudText Typo="Typo.h4" Align="Align.Center">
+                    Next Game: @(_hoursRemaining):@(_minutesRemaining):@(_secondsRemaining)
+                </MudText>
+            </MudItem>
+            <MudItem xs="12">
+                @for (var i = 0; i < 6; i++)
+                {
+                    var localIndex = i;
+                    <MudPaper Class="ma-4 d-flex justify-space-between">
+                        <strong>@localIndex.ToString()</strong>
+                        <span>@_gameRecords.Count(q => q.NumberOfAttemptsRequired == localIndex)</span>
+                    </MudPaper>
+                }
+            </MudItem>
+        </MudGrid>
+        
     </DialogContent>
 </MudDialog>
 
