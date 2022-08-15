@@ -20,9 +20,9 @@
 <MudDropContainer T="DropItem" Items="_items" ItemsSelector="@((item,dropzone) => item.Identifier == dropzone)"
                   ItemDropped="ItemUpdated" @ref="_dropContainerReference" ItemIsDisabled="q => IsTodaysGameSolved">
     <ChildContent>
-        <MudGrid Style="height: 100vh">
-            <MudItem xs="3" Style="justify-items:stretch;" Class="d-flex flex-column justify-space-between">
-                <MudTabs Class="rounded mud-background-gray" @ref="_tabsReference" Style="height: 80%;overflow-y:scroll;">
+        <MudGrid Style="height: 100vh" Spacing="1">
+            <MudItem xs="2" Style="justify-items:stretch;height:100%;" Class="d-flex flex-column justify-start">
+                <MudTabs Class="rounded mud-background-gray mb-1" @ref="_tabsReference" Style="height: 80%;overflow-y:scroll;">
                     <MudTabPanel Text="Countries">
                         <MudDropZone T="DropItem" Identifier="@_unsetIdentifier" Class="unset-container pa-6">
                         </MudDropZone>
@@ -54,14 +54,14 @@
                     </MudTabPanel>
                 </MudTabs>
 
-                <MudPaper Class="ma-4 d-flex justify-space-between">
+                <MudPaper Class="d-flex justify-space-between">
                     <MudButton Color="Color.Warning" OnClick="ResetAllItemsAsUnset" Variant="Variant.Filled" Disabled="IsTodaysGameSolved">Reset</MudButton>
                     <MudButton Color="Color.Info" OnClick="OpenDialog" Variant="Variant.Filled">Stats</MudButton>
                     <MudButton Color="Color.Success" OnClick="Submit" Variant="Variant.Filled" Disabled="IsSubmissionValid is false">Submit</MudButton>
                 </MudPaper>
             </MudItem>
-            <MudItem xs="9" Style="height: 100%" Class="assigned-countries-container">
-                <MudGrid Style="height: 100%">
+            <MudItem xs="10" Style="height: 100%" Class="assigned-countries-container">
+                <MudGrid Style="height: 100%" Spacing="1">
                     @for (var i = 0; i < _items.Count; i++)
                     {
                         var localParentIndex = i;
