@@ -71,7 +71,7 @@
                             <MudCard Style="height: 100%">
                                 <MudDropZone T="DropItem" Identifier="@country.Country.Code"
                                          Class="flex-grow-1" Style="height: 100%;">
-                                    <div style="height:calc(100% - 52px);background-color:white;border-color:dodgerblue;border-bottom-width:2px;"
+                                    <div style="height:calc(100% - 52px);border-color:dodgerblue;border-bottom-width:2px;"
                                      class="d-flex justify-space-between">
                                         <div style=@($"background-image: url(\"/countryimages/{country.Country.Code}.svg\");background-size:contain;background-repeat:no-repeat;background-position:center;width:50%;")
                                          class="pb-2"></div>
@@ -86,7 +86,7 @@
                                                 {
                                                     color = thisAttempt.IsCorrect ? Color.Success : Color.Error;
                                                 }
-                                                <MudTimelineItem Variant="Variant.Filled" Color="color" Style="padding-bottom: 3px;color:black" Size="Size.Small">
+                                                <MudTimelineItem Variant="Variant.Filled" Color="color" Style="padding-bottom: 3px;" Size="Size.Small">
                                                     <ItemContent>
                                                         @(thisAttempt.Country.Name.Length > 9 ? $"{thisAttempt.Country.Name.Substring(0, 9)}..." : thisAttempt.Country.Name)
                                                     </ItemContent>
