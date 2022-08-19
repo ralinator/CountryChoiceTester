@@ -54,11 +54,12 @@
                     </MudTabPanel>
                 </MudTabs>
 
-                <MudPaper Class="d-flex justify-space-between">
-                    <MudButton Color="Color.Warning" OnClick="ResetAllItemsAsUnset" Variant="Variant.Filled" Disabled="IsTodaysGameSolved">Reset</MudButton>
-                    <MudButton Color="Color.Info" OnClick="OpenDialog" Variant="Variant.Filled">Stats</MudButton>
-                    <MudButton Color="Color.Success" OnClick="Submit" Variant="Variant.Filled" Disabled="IsSubmissionValid is false">Submit</MudButton>
+                <MudPaper Class="d-flex justify-space-between mb-2">
+                    <MudIconButton Color="Color.Warning" Icon="@Icons.Filled.Block" OnClick="ResetAllItemsAsUnset" Variant="Variant.Filled" Disabled="IsTodaysGameSolved"></MudIconButton>
+                    <MudIconButton Color="Color.Info" Icon="@Icons.Filled.QueryStats" OnClick="OpenDialog" Variant="Variant.Filled"></MudIconButton>
+                    <MudIconButton Color="Color.Primary" Icon="@Icons.Filled.Help" OnClick="OpenHelpDialog" Variant="Variant.Filled"></MudIconButton>
                 </MudPaper>
+                <MudButton Color="Color.Success" OnClick="Submit" Variant="Variant.Filled" Disabled="IsSubmissionValid is false" EndIcon="@Icons.Filled.Done">Submit</MudButton>
             </MudItem>
             <MudItem xs="10" Style="height: 100%" Class="assigned-countries-container">
                 <MudGrid Style="height: 100%" Spacing="1">
@@ -85,7 +86,7 @@
                                                 {
                                                     color = thisAttempt.IsCorrect ? Color.Success : Color.Error;
                                                 }
-                                                <MudTimelineItem Variant="Variant.Filled" Color="color" Style="padding-bottom: 3px;" Size="Size.Small">
+                                                <MudTimelineItem Variant="Variant.Filled" Color="color" Style="padding-bottom: 3px;color:black" Size="Size.Small">
                                                     <ItemContent>
                                                         @(thisAttempt.Country.Name.Length > 9 ? $"{thisAttempt.Country.Name.Substring(0, 9)}..." : thisAttempt.Country.Name)
                                                     </ItemContent>

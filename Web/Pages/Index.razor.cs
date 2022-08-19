@@ -57,6 +57,11 @@ namespace Web.Pages
             //await db.Database.EnsureDeletedAsync();
             await db.Database.EnsureCreatedAsync();
             _gameRecords = await db.GameRecords.ToListAsync();
+            var hasPageBeenLoadedPreviously = await db.GameStates.AnyAsync();
+            if (hasPageBeenLoadedPreviously is false)
+            {
+                OpenHelpDialog();
+            }
             var currentGame = await db.GameStates.OrderBy(q => q.Id).LastOrDefaultAsync(q => q.Date.Date == DateTime.Today);
             await LoadPreviousAttemptsToday();
             if (currentGame is not null)
@@ -240,6 +245,18 @@ namespace Web.Pages
                 CloseButton = true,
             };
             DialogService.Show<GameStatsDialog>("Game Stats", options);
+        }
+
+        private void OpenHelpDialog()
+        {
+            var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true,
+                FullWidth = true,
+                MaxWidth = MaxWidth.Medium,
+                CloseButton = true,
+            };
+            DialogService.Show<HelpDialog>("", options);
         }
     }
 }

@@ -1,0 +1,26 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudContainer Style="max-height: 85vh;">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h2" Align="Align.Center">
+                        How to play
+                    </MudText>
+                    <MudPaper Width="100%" Class="mb-2">
+                        <MudList Clickable="false" Dense="false" DisableGutters="false">
+                            <MudListItem Icon="@Icons.Filled.LabelImportant" Text="Country names are listed down the left hand side in boxes" />
+                            <MudListItem Icon="@Icons.Filled.LabelImportant" Text="Drag and Drop the boxes into the outlines you think they match" />
+                            <MudListItem Icon="@Icons.Filled.LabelImportant" Text="Once you have matched the names up to all 9 outlines check your answers by clicking submit" />
+                            <MudListItem Icon="@Icons.Filled.LabelImportant" Text="As you make more guesses you will gain hints along the right hand side of each outline" />
+                            <MudListItem Icon="@Icons.Filled.LabelImportant" Text="Come back for a new game each day" />
+                        </MudList>
+                    </MudPaper>
+                    <div class="d-flex justify-center">
+                        <MudButton ButtonType="ButtonType.Button" Size="Size.Large" Color="Color.Success"
+                                   Variant="Variant.Filled" OnClick="() => MudDialog.Close()">Dismiss</MudButton>
+                    </div>
+                </MudItem>
+            </MudGrid>
+        </MudContainer>
+    </DialogContent>
+</MudDialog>
